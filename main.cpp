@@ -2,14 +2,19 @@
 #include <fstream>
 #include <vector>
 #include "CREATE.h"
+#include"INSERT.h"
+#include"SHOW.h"
 using namespace std;
 
 
 
 int main() {
-    // Example: Creating a table
-    vector<string> columns = {"I", "NAME", "ROLL"};
-    createTable("students", columns);
+   
+
+   createTable("CREATE", "table", "thirdTable", "(");
+
+   insertTable();
+
 
     return 0;
 }

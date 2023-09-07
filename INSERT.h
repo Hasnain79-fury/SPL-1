@@ -1,80 +1,70 @@
-#include<bits/stdc++.h>
-#include<fstream>
+#include <bits/stdc++.h>
+#include <fstream>
 using namespace std;
 #define ll long long
 
 ll flag = 0;
-struct ARRAY {
+
+struct TableInfo {
     string table_name;
     ll row;
     ll column;
-    };
+};
 
-string *HEADER;
-string *FIELD;
+string *header;
+string *field;
 
-void column_name (ll x)
-{
-    HEADER = new string [x];
+void initializeHeader(ll x) {
+    header = new string[x];
 }
 
-void field_value(ll x)
-{
-    FIELD = new string [x];
+void initializeField(ll x) {
+    field = new string[x];
 }
 
-/* INSERT INTO table_name
-   values ( 1 , Tash , 1223 ) ;
-*/
-void insert_table ()
-{
+void insertTable() {
     string into, tablename, value, str;
 
-    // input into table_name values (
+    // Input: INTO table_name VALUES (
     cin >> into;
     cin >> tablename;
     cin >> value;
     cin >> str;
 
-    // store table name, total row, total column from file
-    // first need to store total table no
+    // Store table name, total row, total column from file.
+    // First, need to store the total table count.
     ifstream ifile;
 
     ifile.open("FileInformation.txt", ios::in);
-    string tablee;
-    ll total_table;
-    ifile >> tablee;
-    if(tablee=="")
-        total_table=0;
+    string tableCount;
+    ll totalTables;
+    ifile >> tableCount;
+    if (tableCount == "")
+        totalTables = 0;
     else
-        total_table=stoll(tablee);
+        totalTables = stoll(tableCount);
 
-    // close the file
+    // Close the file.
     ifile.close();
 
-    //if there is no table then show this message
-    if ( total_table == 0)
-    {
-        cout << " Can't insert the values as there is no table. First create a table.\n";
-    }
-
-    else
-    {
+    // If there is no table, show this message.
+    if (totalTables == 0) {
+        cout << "Can't insert values as there is no table. First, create a table.\n";
+    } else {
         ifstream ifile;
 
         ifile.open("FileInformation.txt", ios::in);
 
-        ifile >> total_table;
+        ifile >> totalTables;
 
-        ARRAY tableinfo[total_table];
+        TableInfo tableInfo[totalTables];
 
-        //storing table name, total row, total column
+        // Store table name, total row, total column.
 
-        for(ll i=0; i<total_table; i++)
-        {
-            ifile >> tableinfo[i].table_name;
-            ifile >> tableinfo[i].row;
-            ifile >> tableinfo[i].column;
+        for (ll i = 0; i < totalTables; i++) {
+            ifile >> tableInfo[i].table_name;
+            ifile >> tableInfo[i].row;
+            ifile >> tableInfo[i].column;
         }
 
         ifile.close();
@@ -85,138 +75,115 @@ void insert_table ()
 
         ofile.open("FileInformation.txt", ios::app);
 
-        ofile << total_table << '\n';
+        ofile << totalTables << '\n';
 
-        for(ll i=0; i<total_table; i++)
-        {
-            if(tableinfo[i].table_name == tablename)
-            {
-                ofile << tableinfo[i].table_name << " ";
-                ofile << tableinfo[i].row + 1 << " ";
-                ofile << tableinfo[i].column << " ";
+        for (ll i = 0; i < totalTables; i++) {
+            if (tableInfo[i].table_name == tablename) {
+                ofile << tableInfo[i].table_name << " ";
+                ofile << tableInfo[i].row + 1 << " ";
+                ofile << tableInfo[i].column << " ";
                 ofile << endl;
 
-            }
-            else
-            {
-                ofile << tableinfo[i].table_name << " ";
-                ofile << tableinfo[i].row << " ";
-                ofile << tableinfo[i].column << " ";
+            } else {
+                ofile << tableInfo[i].table_name << " ";
+                ofile << tableInfo[i].row << " ";
+                ofile << tableInfo[i].column << " ";
                 ofile << endl;
             }
         }
 
         ofile.close();
 
-        ll sum_of_rows = 0;
+        ll sumOfRows = 0;
 
-        for (ll i=0; i<total_table; i++)
-        {
-            sum_of_rows += tableinfo[i].row;
+        for (ll i = 0; i < totalTables; i++) {
+            sumOfRows += tableInfo[i].row;
         }
 
-        field_value (sum_of_rows);
+        initializeField(sumOfRows);
+        initializeHeader(totalTables);
 
-        column_name (total_table);
+        // Store information from the database.
+        ifstream dataFile;
+        dataFile.open("My_database.txt", ios::in);
 
-        //storing the information from database
-        ifstream iffile;
-
-        iffile.open("My_database.txt", ios::in );
-
-        string str1, table;
+        string str1, tableName;
 
         ll index = 0;
 
-        for(ll i=0; i<total_table; i++)
-        {
-            iffile >> table;
-            getline(iffile, str1);
-            getline(iffile, str1);
-            getline(iffile, HEADER[i]);
-            getline(iffile, str1);
+        for (ll i = 0; i < totalTables; i++) {
+            dataFile >> tableName;
+            getline(dataFile, str1);
+            getline(dataFile, str1);
+            getline(dataFile, header[i]);
+            getline(dataFile, str1);
 
             ll Iindex = 0;
 
-            while (Iindex != tableinfo[i].row)
-            {
-                getline(iffile, FIELD[index]);
+            while (Iindex != tableInfo[i].row) {
+                getline(dataFile, field[index]);
                 index++;
                 Iindex++;
             }
 
-            if (i != total_table-1 )
-            {
-                getline(iffile, str1);
+            if (i != totalTables - 1) {
+                getline(dataFile, str1);
             }
         }
 
-        iffile.close();
+        dataFile.close();
 
         remove("My_database.txt");
 
-        ofstream offile;
+        ofstream outputFile;
 
-        offile.open( "My_database.txt", ios::app );
+        outputFile.open("My_database.txt", ios::app);
 
         index = 0;
 
-        for(ll i=0; i<total_table; i++)
-        {
-            offile << tableinfo[i].table_name << endl << endl;
-            offile << HEADER[i] << endl << endl;
+        for (ll i = 0; i < totalTables; i++) {
+            outputFile << tableInfo[i].table_name << endl << endl;
+            outputFile << header[i] << endl << endl;
 
             ll Iindex = 0;
 
-            while (Iindex != tableinfo[i].row)
-            {
-                offile << FIELD[index] << endl;
+            while (Iindex != tableInfo[i].row) {
+                outputFile << field[index] << endl;
                 index++;
                 Iindex++;
             }
 
-            if ( tableinfo[i].table_name == tablename )
-            {   
-                flag=1;
-               if(str=="("){
-                    while(1)
-                        {
-                            string comma;
+            if (tableInfo[i].table_name == tablename) {
+                flag = 1;
+                if (str == "(") {
+                    while (1) {
+                        string comma;
 
-                            cin >> str >> comma;
+                        cin >> str >> comma;
 
-                            if(comma!=")")
-                            {
-                                offile << str << "\t" << "\t" << "\t";
-                            }
-                            else
-                            {
-                               string ss;
-                               cin >> ss;
-                               offile << str << "\t" << "\t" << "\t";
-                               break;
-                            }
+                        if (comma != ")") {
+                            outputFile << str << "\t" << "\t" << "\t";
+                        } else {
+                            string ss;
+                            cin >> ss;
+                            outputFile << str << "\t" << "\t" << "\t";
+                            break;
                         }
-                            offile << endl;
-               }
+                    }
+                    outputFile << endl;
+                }
             }
-            
-            if (i != total_table-1 )
-            {
-                offile << endl;
+
+            if (i != totalTables - 1) {
+                outputFile << endl;
             }
         }
 
-        offile.close();
-        if(flag)
-        {
-            cout << "Row inserted in " << tablename <<" successfully!" << endl << endl;
+        outputFile.close();
+        if (flag) {
+            cout << "Row inserted in " << tablename << " successfully!" << endl << endl;
+        } else {
+            cout << "There is no such table." << endl << endl;
         }
-        else
-        {
-           cout << "There is no such table." << endl << endl; 
-        }
-
     }
-
 }
