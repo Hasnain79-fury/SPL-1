@@ -1,0 +1,17 @@
+thirdTable
+
+roll			id			name			
+
+
+
+
+
+1,			alvi			
+
+
+
+
+1Table
+
+roll			name			id			
+

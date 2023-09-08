@@ -11,9 +11,9 @@ using namespace std;
 int main() {
    
 
-   createTable("CREATE", "table", "thirdTable", "(");
+   //createtable("CREATE", "table", "1Table", "(");
 
-   insertTable();
+   insert_table();
 
 
     return 0;
