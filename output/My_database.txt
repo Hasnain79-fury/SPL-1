@@ -1,17 +1,6 @@
-thirdTable
-
-roll			id			name			
-
-
-
-
-
-1,			alvi			
-
-
-
-
-1Table
+Table99
 
 roll			name			id			
 
+1			alvi			10)			
+1			smai			10			

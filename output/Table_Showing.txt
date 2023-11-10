@@ -1,3 +1,1 @@
-thirdTable	roll	int	id	int	name	varchar	.
-
-1Table	roll	int	name	varchar	id	int	.
+Table99	roll	int	name	varchar	id	int	.

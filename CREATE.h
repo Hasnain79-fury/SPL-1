@@ -41,6 +41,7 @@ void createtable(string command, string table, string TABLENAME, string str)
     else 
         total_table=stoll(s);
     infofile.close();
+    //???????
     if(total_table == 0)
     {
        ofstream database;
@@ -117,9 +118,9 @@ void createtable(string command, string table, string TABLENAME, string str)
         {
             sum_of_rows += tableinfo[i].row;
         }
-        
+        //?????????
         field_value1 (sum_of_rows);
-
+        //?????????
         column_name1 (total_table);
 
         //storing the information from database
