@@ -48,12 +48,13 @@ public:
     Table(const string& table_name, int rows, int cols)
         : name(table_name), data(rows, vector<string>(cols)) {}
 
-    void setColumnNames() {
-        cout << "Enter column names for the table:" << endl;
-        for (int i = 0; i < data[0].size(); i++) {
+    void setColumnNames(vector<string> s) {
+        //cout << "Enter column names for the table:" << endl;
+        for (int i = 0; i < s.size(); i++) {
             string columnName;
-            cout << "Column " << i + 1 << ": ";
-            cin >> columnName;
+            //cout << "Column " << i + 1 << ": ";
+            //cin >> columnName;
+            columnName = s[i];
             columnNames.push_back(columnName);
         }
     }
@@ -223,22 +224,66 @@ public:
 
 };
 
+
+
+
+
 class demo{
         public:
-            void create(){
+            
 
-                string name;
-                cout<<"Enter table name: ";
-                cin>>name;
-                if(tableExistsOnDisk(name)){
+            void create(){
+                // Variables to store the result
+                vector<string> columnNames;
+                 string tableName; string cmd;
+                 cout<<"Enter create command: ";
+                 cin.ignore();
+                getline(cin, cmd);
+                 
+                 
+               // parsing
+
+               // Find the position of the opening and closing parentheses
+    size_t posOpen = cmd.find("(");
+    size_t posClose = cmd.find(")");
+
+    if (posOpen != string::npos && posClose != string::npos && posOpen < posClose) {
+        // Extract the substring between the parentheses
+        string columnsSubstring = cmd.substr(posOpen + 1, posClose - posOpen - 1);
+
+        // Tokenize the substring based on commas
+        stringstream ss(columnsSubstring);
+        string token;
+
+        // Count the number of columns and store them in the vector
+        while (getline(ss, token, ',')) {
+            // Remove leading and trailing whitespaces from the token
+            token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
+
+            // Skip empty tokens
+            if (!token.empty()) {
+                columnNames.push_back(token);
+            }
+        }
+
+        // Extract the table name (assuming it's the first word in the command)
+        tableName = cmd.substr(13, posOpen - 14); // 13 is the length of "CREATE TABLE "
+    } else {
+        // Invalid command format
+        cout << "Invalid CREATE TABLE command format." << endl;
+    }
+                
+
+                if(tableExistsOnDisk(tableName)){
                     cout<<"Table exists select another name";
                 }
                 else{
+                    
                     int x,y;
-                    cout<<"Enter num of rows and columns in the table : ";
-                    cin>>x>>y;
-                    Table newTable(name,x,y);
-                    newTable.setColumnNames();
+                   // cout<<"Enter num of rows and columns in the table : ";
+                    x=1; y = columnNames.size();
+                    Table newTable(tableName,x,y);
+                    newTable.setColumnNames(columnNames);
 
                     newTable.saveToFile();
 
@@ -466,8 +511,8 @@ int main() {
     return 0;*/
     demo d;
     //d.selectAll();
-    //d.create(); 
-    d.insert();
+    d.create(); 
+    //d.insert();
     
 
     //d.selectDistinct();

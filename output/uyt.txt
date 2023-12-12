@@ -1,0 +1,3 @@
+Table Name: uyt
+ name roll id
+   
