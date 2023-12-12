@@ -126,12 +126,12 @@ public:
         }
     }
 
-    void insert(HashTable& hashTable) {
-        cout << "Insert new elements: ";
+    void insert(HashTable& hashTable,vector<string> s) {
+        //cout << "Insert new elements: ";
         vector<string> temp;
         for (int i = 0; i < columnNames.size(); i++) {
             string x;
-            cin >> x;
+            x=s[i];
             temp.push_back(x);
         }
 
@@ -267,7 +267,7 @@ class demo{
         }
 
         // Extract the table name (assuming it's the first word in the command)
-        tableName = cmd.substr(13, posOpen - 14); // 13 is the length of "CREATE TABLE "
+        tableName = cmd.substr(12, posOpen - 13); // 13 is the length of "CREATE TABLE "
     } else {
         // Invalid command format
         cout << "Invalid CREATE TABLE command format." << endl;
@@ -293,19 +293,54 @@ class demo{
 
             }
 
+            
+
             void insert(){
                 //first give the name and check if the table exists on disk
-                string name;
-                cin>>name;
+                string cmd;
+                cout<<"Enter insert into command: ";
+                 cin.ignore();
+                getline(cin, cmd);
 
-                if(tableExistsOnDisk(name)){
-                    Table existingTable(name,3,5);
+   string tableName;
+   vector<string> values;
+
+    size_t posOpen = cmd.find("(");
+        size_t posClose = cmd.find(")");
+        if (posOpen != string::npos && posClose != string::npos && posOpen < posClose) {
+        // Extract the substring between the parentheses
+        string columnsSubstring = cmd.substr(posOpen + 1, posClose - posOpen - 1);
+
+        // Tokenize the substring based on commas
+        stringstream ss(columnsSubstring);
+        string token;
+
+        // Count the number of columns and store them in the vector
+        while (getline(ss, token, ',')) {
+            // Remove leading and trailing whitespaces from the token
+            token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
+
+            // Skip empty tokens
+            if (!token.empty()) {
+                values.push_back(token);
+            }
+        }
+          tableName = cmd.substr(11, posOpen - 19);
+
+    }
+
+    else {
+        // Invalid command format
+        cout << "Invalid CREATE TABLE command format." << endl;
+    }
+                if(tableExistsOnDisk(tableName)){
+                    Table existingTable(tableName,3,5);
                     existingTable.loadFromFile();
                     existingTable.display();
 
                     HashTable hashTable(10);
 
-                    existingTable.insert(hashTable);
+                    existingTable.insert(hashTable,values);
 
                     existingTable.saveToFile();
                     existingTable.display();
@@ -511,8 +546,8 @@ int main() {
     return 0;*/
     demo d;
     //d.selectAll();
-    d.create(); 
-    //d.insert();
+    //Id.create(); 
+    d.insert();
     
 
     //d.selectDistinct();
