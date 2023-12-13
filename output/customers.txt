@@ -1,0 +1,6 @@
+Table Name: customers
+ customerid products prices
+2 5 10 
+2 5 1 
+3 7 1 
+3 7 1 

@@ -176,6 +176,37 @@ public:
 
         return result;
     }
+    //selec where greater than
+    vector<vector<string>> selectWhereGreaterThan(const string& columnName, const string& value) const {
+    vector<vector<string>> result;
+    size_t columnIndex = findColumnIndex(columnName);
+
+    if (columnIndex != string::npos) {
+        for (const auto& row : data) {
+            if (row.size() > columnIndex) {
+                const string& cellValue = row[columnIndex];
+                bool greaterThan;
+
+                // Check if the column contains integer values
+                try {
+                    int intValue = stoi(cellValue);
+                    int compareValue = stoi(value);
+                    greaterThan = (intValue > compareValue);
+                } catch (const invalid_argument&) {
+                    // Comparison based on alphabetical order
+                    greaterThan = (cellValue > value);
+                }
+
+                if (greaterThan) {
+                    result.push_back(row);
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 
     // Function to select distinct values from a column
     vector<string> selectDistinct(const string& columnName) const {
@@ -446,6 +477,37 @@ class demo{
                 return file.good();
         }
 
+        //select where greater than
+        void selectWheregreaterthan() {
+        string tableName, columnName, value;
+        cout << "Enter table name: ";
+        cin >> tableName;
+
+        if (tableExistsOnDisk(tableName)) {
+            Table existingTable(tableName, 3, 5);
+            existingTable.loadFromFile();
+            existingTable.display();
+
+            cout << "Enter column name for condition: ";
+            cin >> columnName;
+
+            cout << "Enter value for condition: ";
+            cin >> value;
+
+            vector<vector<string>> selectedRows = existingTable.selectWhereGreaterThan(columnName, value);
+
+            cout << "Selected Rows for condition: " << columnName << " = " << value << endl;
+            for (const auto& row : selectedRows) {
+                for (const string& cell : row) {
+                    cout << cell << " ";
+                }
+                cout << endl;
+            }
+        } else {
+            cout << "Table doesn't exist" << endl;
+        }
+    }
+
     private:
     // Helper function to display the result of a SELECT operation
     void displayResult(const vector<vector<string>>& result) const {
@@ -546,11 +608,13 @@ int main() {
     return 0;*/
     demo d;
     //d.selectAll();
-    //Id.create(); 
-    d.insert();
+    //d.create(); 
+   
+    //d.insert();
     
 
-    //d.selectDistinct();
-
+   // d.selectDistinct();
+    d.selectWheregreaterthan();
     //d.selectColumn(); 
+   // d.selectWhere();
 }

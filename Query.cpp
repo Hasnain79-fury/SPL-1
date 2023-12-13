@@ -15,6 +15,10 @@ using namespace std;
 
 using namespace std;
 
+/*CREATE TABLE alvi ( a, a, a )
+INSERT INTO ALVI VALUES ( a, a, a )
+*/
+
 void parseInsertInto(const string& cmd, string& tableName, vector<string>& values) {
         size_t posOpen = cmd.find("(");
         size_t posClose = cmd.find(")");
