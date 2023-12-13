@@ -17,7 +17,6 @@ public:
     HashTable(size_t buckets_count) : numBuckets(buckets_count), buckets(buckets_count) {}
 
     size_t hashFunction(const string& key) const {
-        // Simple hash function for demonstration purposes
         return hash<string>{}(key) % numBuckets;
     }
 
@@ -49,11 +48,10 @@ public:
         : name(table_name), data(rows, vector<string>(cols)) {}
 
     void setColumnNames(vector<string> s) {
-        //cout << "Enter column names for the table:" << endl;
+       
         for (int i = 0; i < s.size(); i++) {
             string columnName;
-            //cout << "Column " << i + 1 << ": ";
-            //cin >> columnName;
+            
             columnName = s[i];
             columnNames.push_back(columnName);
         }
@@ -89,7 +87,6 @@ public:
         if (file.is_open()) {
             string line;
 
-            // Read the first line containing the table name
             getline(file, line);
 
             columnNames.clear();
@@ -103,10 +100,10 @@ public:
                 }
             }
 
-            // Clear the existing data and column names
+           
             data.clear();
 
-            // Read data until there are no more non-empty lines
+            
             while (getline(file, line) && !line.empty()) {
                 istringstream rowStream(line);
                 vector<string> row;
@@ -127,7 +124,7 @@ public:
     }
 
     void insert(HashTable& hashTable,vector<string> s) {
-        //cout << "Insert new elements: ";
+       
         vector<string> temp;
         for (int i = 0; i < columnNames.size(); i++) {
             string x;
@@ -135,10 +132,9 @@ public:
             temp.push_back(x);
         }
 
-        // Insert the data into the hash table
+        
         hashTable.insert(temp[0], temp);
 
-        // Insert the data into the main data vector
         data.push_back(temp);
     }
 
@@ -156,12 +152,10 @@ public:
         }
     }
     
-    // Function to select all rows and columns
     vector<vector<string>> selectAll() const {
         return data;
     }
 
-    // Function to select rows based on a condition
     vector<vector<string>> selectWhere(const string& columnName, const string& value) const {
         vector<vector<string>> result;
         size_t columnIndex = findColumnIndex(columnName);
@@ -176,7 +170,6 @@ public:
 
         return result;
     }
-    //selec where greater than
     vector<vector<string>> selectWhereGreaterThan(const string& columnName, const string& value) const {
     vector<vector<string>> result;
     size_t columnIndex = findColumnIndex(columnName);
@@ -187,13 +180,11 @@ public:
                 const string& cellValue = row[columnIndex];
                 bool greaterThan;
 
-                // Check if the column contains integer values
                 try {
                     int intValue = stoi(cellValue);
                     int compareValue = stoi(value);
                     greaterThan = (intValue > compareValue);
                 } catch (const invalid_argument&) {
-                    // Comparison based on alphabetical order
                     greaterThan = (cellValue > value);
                 }
 
@@ -208,7 +199,6 @@ public:
 }
 
 
-    // Function to select distinct values from a column
     vector<string> selectDistinct(const string& columnName) const {
         vector<string> distinctValues;
         size_t columnIndex = findColumnIndex(columnName);
@@ -228,14 +218,13 @@ public:
         return distinctValues;
     }
 
-    // Function to find column index
     size_t findColumnIndex(const string& columnName) const {
         for (size_t i = 0; i < columnNames.size(); ++i) {
             if (columnNames[i] == columnName) {
                 return i;
             }
         }
-        return string::npos; // Not found
+        return string::npos; 
     }
 
     vector<string> selectColumn(const string& columnName) const {
@@ -264,7 +253,6 @@ class demo{
             
 
             void create(){
-                // Variables to store the result
                 vector<string> columnNames;
                  string tableName; string cmd;
                  cout<<"Enter create command: ";
@@ -272,9 +260,7 @@ class demo{
                 getline(cin, cmd);
                  
                  
-               // parsing
-
-               // Find the position of the opening and closing parentheses
+              
     size_t posOpen = cmd.find("(");
     size_t posClose = cmd.find(")");
 
@@ -407,11 +393,40 @@ class demo{
         }
     }
 
+    string parseTableName(const string& query) {
+    istringstream iss(query);
+    string keyword, tableName;
+
+    
+    iss >> keyword;
+
+   
+    if (keyword == "SELECT") {
+        // Skip the * or column names
+        iss >> keyword;
+
+        // Read the FROM keyword
+        iss >> keyword;
+
+        // Read the table name
+        iss >> tableName;
+    } else {
+        // Handle error for invalid query
+        cout << "Invalid SELECT query." << endl;
+    }
+
+    return tableName;
+}
+
     void selectAll() {
         string tableName;
-        cout << "Enter table name: ";
-        cin >> tableName;
+       string sqlQuery ;
+    cout<<"Enter select command: ";
+                 
+                getline(cin, sqlQuery);
 
+    
+    tableName = parseTableName(sqlQuery);
         if (tableExistsOnDisk(tableName)) {
             Table existingTable(tableName, 3, 5);
             existingTable.loadFromFile();
@@ -607,14 +622,14 @@ int main() {
 
     return 0;*/
     demo d;
-    //d.selectAll();
+    d.selectAll();
     //d.create(); 
    
     //d.insert();
     
 
    // d.selectDistinct();
-    d.selectWheregreaterthan();
+   // d.selectWheregreaterthan();
     //d.selectColumn(); 
    // d.selectWhere();
 }
