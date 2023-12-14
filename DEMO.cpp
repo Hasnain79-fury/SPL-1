@@ -265,28 +265,28 @@ class demo{
     size_t posClose = cmd.find(")");
 
     if (posOpen != string::npos && posClose != string::npos && posOpen < posClose) {
-        // Extract the substring between the parentheses
+        
         string columnsSubstring = cmd.substr(posOpen + 1, posClose - posOpen - 1);
 
         // Tokenize the substring based on commas
         stringstream ss(columnsSubstring);
         string token;
 
-        // Count the number of columns and store them in the vector
+       
         while (getline(ss, token, ',')) {
-            // Remove leading and trailing whitespaces from the token
+            
             token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
 
-            // Skip empty tokens
+            
             if (!token.empty()) {
                 columnNames.push_back(token);
             }
         }
 
-        // Extract the table name (assuming it's the first word in the command)
-        tableName = cmd.substr(12, posOpen - 13); // 13 is the length of "CREATE TABLE "
+        
+        tableName = cmd.substr(12, posOpen - 13); 
     } else {
-        // Invalid command format
+        
         cout << "Invalid CREATE TABLE command format." << endl;
     }
                 
@@ -297,8 +297,8 @@ class demo{
                 else{
                     
                     int x,y;
-                   // cout<<"Enter num of rows and columns in the table : ";
-                    x=1; y = columnNames.size();
+                   
+                    x=0; y = columnNames.size();
                     Table newTable(tableName,x,y);
                     newTable.setColumnNames(columnNames);
 
@@ -313,7 +313,7 @@ class demo{
             
 
             void insert(){
-                //first give the name and check if the table exists on disk
+                
                 string cmd;
                 cout<<"Enter insert into command: ";
                  cin.ignore();
@@ -325,19 +325,19 @@ class demo{
     size_t posOpen = cmd.find("(");
         size_t posClose = cmd.find(")");
         if (posOpen != string::npos && posClose != string::npos && posOpen < posClose) {
-        // Extract the substring between the parentheses
+        
         string columnsSubstring = cmd.substr(posOpen + 1, posClose - posOpen - 1);
 
-        // Tokenize the substring based on commas
+        
         stringstream ss(columnsSubstring);
         string token;
 
-        // Count the number of columns and store them in the vector
+        
         while (getline(ss, token, ',')) {
-            // Remove leading and trailing whitespaces from the token
+            
             token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
 
-            // Skip empty tokens
+            
             if (!token.empty()) {
                 values.push_back(token);
             }
@@ -347,7 +347,7 @@ class demo{
     }
 
     else {
-        // Invalid command format
+       
         cout << "Invalid CREATE TABLE command format." << endl;
     }
                 if(tableExistsOnDisk(tableName)){
@@ -402,16 +402,16 @@ class demo{
 
    
     if (keyword == "SELECT") {
-        // Skip the * or column names
+        
         iss >> keyword;
 
-        // Read the FROM keyword
+        
         iss >> keyword;
 
-        // Read the table name
+       
         iss >> tableName;
     } else {
-        // Handle error for invalid query
+        
         cout << "Invalid SELECT query." << endl;
     }
 
@@ -441,7 +441,7 @@ class demo{
         }
     }
 
-    // Function to select rows based on a condition
+   
     void selectWhere() {
         string tableName, columnName, value;
         cout << "Enter table name: ";
@@ -524,7 +524,7 @@ class demo{
     }
 
     private:
-    // Helper function to display the result of a SELECT operation
+   
     void displayResult(const vector<vector<string>>& result) const {
         for (const auto& row : result) {
             for (const string& cell : row) {
@@ -534,7 +534,7 @@ class demo{
         }
     }
 
-    // Helper function to display the result of a SELECT operation for a single column
+    
     void displayResult(const vector<string>& result) const {
         for (const string& value : result) {
             cout << value << endl;
@@ -622,14 +622,14 @@ int main() {
 
     return 0;*/
     demo d;
-    d.selectAll();
-    //d.create(); 
    
-    //d.insert();
+    d.create(); 
+   
+    d.insert();
     
-
-   // d.selectDistinct();
+     d.selectAll();
+    d.selectDistinct();
    // d.selectWheregreaterthan();
-    //d.selectColumn(); 
-   // d.selectWhere();
+    d.selectColumn(); 
+    d.selectWhere();
 }

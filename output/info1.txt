@@ -1,0 +1,4 @@
+Table Name: info1
+ name roll id
+
+alvi 27 067 
