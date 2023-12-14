@@ -8,9 +8,17 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#include <iostream>
+#include <vector>
+#include <list>
+#include <string>
+#include <functional>
+
+using namespace std;
+
 class HashTable {
 private:
-    vector<list<vector<string>>> buckets;
+    vector<list<pair<string, vector<string>>>> buckets;
     size_t numBuckets;
 
 public:
@@ -22,14 +30,25 @@ public:
 
     void insert(const string& key, const vector<string>& data) {
         size_t bucketIndex = hashFunction(key);
-        buckets[bucketIndex].push_back(data);
+        buckets[bucketIndex].push_back({key, data});
+    }
+
+    vector<string> getData(const string& key) const {
+        size_t bucketIndex = hashFunction(key);
+        for (const auto& item : buckets[bucketIndex]) {
+            if (item.first == key) {
+                return item.second;
+            }
+        }
+        // Return an empty vector if key is not found
+        return {};
     }
 
     void display() const {
         for (size_t i = 0; i < numBuckets; ++i) {
             cout << "Bucket " << i << ": ";
             for (const auto& item : buckets[i]) {
-                for (const string& cell : item) {
+                for (const string& cell : item.second) {
                     cout << cell << " ";
                 }
                 cout << "| ";
@@ -39,13 +58,16 @@ public:
     }
 };
 
+
 class Table {
 public:
+    
+    HashTable hashTable;
      string name;
     vector<string> columnNames;
     vector<vector<string>> data;
     Table(const string& table_name, int rows, int cols)
-        : name(table_name), data(rows, vector<string>(cols)) {}
+        : name(table_name), data(rows, vector<string>(cols)) , hashTable(100) {}
 
     void setColumnNames(vector<string> s) {
        
@@ -114,16 +136,29 @@ public:
                 }
 
                 data.push_back(row);
+                
             }
 
+            
+
             file.close();
+
+            for(int i = 0 ; i < columnNames.size(); i++){
+                string key = columnNames[i];
+                vector<string> d;
+                for(int j = 0 ; j < data.size(); j++){
+                    d.push_back(data[j][i]);
+                }
+                hashTable.insert(key,d);
+            }
+
             cout << "Table data loaded from " << name << ".txt" << endl;
         } else {
             cout << "Table file not found." << endl;
         }
     }
 
-    void insert(HashTable& hashTable,vector<string> s) {
+    void insert(vector<string> s) {
        
         vector<string> temp;
         for (int i = 0; i < columnNames.size(); i++) {
@@ -133,7 +168,7 @@ public:
         }
 
         
-        hashTable.insert(temp[0], temp);
+       // hashTable.insert(temp[0], temp);
 
         data.push_back(temp);
     }
@@ -235,7 +270,7 @@ public:
 
             for (const auto& row : data) {
                 if (row.size() > columnIndex) {
-                    // Convert string to double (assuming the column contains numeric values)
+                   
                     double value = stod(row[columnIndex]);
                     numericColumn.push_back(value);
                 }
@@ -260,7 +295,7 @@ public:
 
             for (const auto& row : data) {
                 if (row.size() > columnIndex) {
-                    // Convert string to double (assuming the column contains numeric values)
+                   
                     double value = stod(row[columnIndex]);
                     numericColumn.push_back(value);
                 }
@@ -279,19 +314,16 @@ public:
 
     
 
-    vector<string> selectColumn(const string& columnName) const {
-        vector<string> result;
-        size_t columnIndex = findColumnIndex(columnName);
+    void selectColumn(const string& columnName) const {
+        vector<string> result=hashTable.getData(columnName);
+        
+    for (const string& cell : result) {
+        cout << cell << " ";
+    }
+    cout << endl;
 
-        if (columnIndex != string::npos) {
-            for (const auto& row : data) {
-                if (row.size() > columnIndex) {
-                    result.push_back(row[columnIndex]);
-                }
-            }
-        }
 
-        return result;
+        return;
     }
 
 };
@@ -302,6 +334,24 @@ public:
 
 class demo{
         public:
+
+        void newSelectcol(){
+            string tableName, columnName;
+        cout << "Enter table name: ";
+        cin >> tableName;
+            if (tableExistsOnDisk(tableName)) {
+            Table existingTable(tableName, 3, 5);
+            existingTable.loadFromFile();
+            existingTable.display();
+
+            cout << "Enter column name to select: ";
+            cin >> columnName;
+
+            existingTable.selectColumn(columnName);
+        } else {
+            cout << "Table doesn't exist" << endl;
+        }
+        }
 
 
         void calculateColumnSum() {
@@ -462,7 +512,7 @@ class demo{
 
                     HashTable hashTable(10);
 
-                    existingTable.insert(hashTable,values);
+                    existingTable.insert(values);
 
                     existingTable.saveToFile();
                     existingTable.display();
@@ -474,29 +524,7 @@ class demo{
 
             }
 
-            void selectColumn() {
-        string tableName, columnName;
-        cout << "Enter table name: ";
-        cin >> tableName;
-
-        if (tableExistsOnDisk(tableName)) {
-            Table existingTable(tableName, 3, 5);
-            existingTable.loadFromFile();
-            existingTable.display();
-
-            cout << "Enter column name to select: ";
-            cin >> columnName;
-
-            vector<string> selectedColumn = existingTable.selectColumn(columnName);
-
-            cout << "Selected Column: " << columnName << endl;
-            for (const string& value : selectedColumn) {
-                cout << value << endl;
-            }
-        } else {
-            cout << "Table doesn't exist" << endl;
-        }
-    }
+           
 
     string parseTableName(const string& query) {
     istringstream iss(query);
@@ -656,10 +684,8 @@ class typecast{
             int num = std::stoi(str);
             result.push_back(num);
         } catch (const std::invalid_argument& e) {
-            // Handle invalid conversions (non-integer strings)
             std::cerr << "Invalid argument: " << e.what() << std::endl;
         } catch (const std::out_of_range& e) {
-            // Handle out-of-range conversions
             std::cerr << "Out of range: " << e.what() << std::endl;
         }
     }
@@ -677,14 +703,15 @@ int main() {
     
     demo d;
    
-    //d.create(); 
+   // d.newSelectcol();
    
-    //d.insert();
+   // d.create(); 
+   //d.insert();
     //d.calculateColumnSum();
-    d.calculateColumnAVG();
-     //d.selectAll();
+   //d.calculateColumnAVG();
+    // d.selectAll();
     //d.selectDistinct();
-   // d.selectWheregreaterthan();
-    //d.selectColumn(); 
+   d.selectWheregreaterthan();
+   
     //d.selectWhere();
 }
