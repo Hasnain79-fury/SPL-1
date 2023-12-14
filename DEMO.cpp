@@ -16,7 +16,8 @@ using namespace std;
 
 using namespace std;
 
-class HashTable {
+class HashTable 
+{
 private:
     vector<list<pair<string, vector<string>>>> buckets;
     size_t numBuckets;
@@ -24,31 +25,40 @@ private:
 public:
     HashTable(size_t buckets_count) : numBuckets(buckets_count), buckets(buckets_count) {}
 
-    size_t hashFunction(const string& key) const {
+    size_t hashFunction(const string& key) const
+     {
         return hash<string>{}(key) % numBuckets;
     }
 
-    void insert(const string& key, const vector<string>& data) {
+    void insert(const string& key, const vector<string>& data) 
+    {
         size_t bucketIndex = hashFunction(key);
         buckets[bucketIndex].push_back({key, data});
     }
 
-    vector<string> getData(const string& key) const {
+    vector<string> getData(const string& key) const 
+    {
         size_t bucketIndex = hashFunction(key);
-        for (const auto& item : buckets[bucketIndex]) {
-            if (item.first == key) {
+        for (const auto& item : buckets[bucketIndex]) 
+        {
+            if (item.first == key)
+             {
                 return item.second;
             }
         }
-        // Return an empty vector if key is not found
+       
         return {};
     }
 
-    void display() const {
-        for (size_t i = 0; i < numBuckets; ++i) {
+    void display() const 
+    {
+        for (size_t i = 0; i < numBuckets; ++i)
+         {
             cout << "Bucket " << i << ": ";
-            for (const auto& item : buckets[i]) {
-                for (const string& cell : item.second) {
+            for (const auto& item : buckets[i]) 
+            {
+                for (const string& cell : item.second) 
+                {
                     cout << cell << " ";
                 }
                 cout << "| ";
@@ -59,7 +69,8 @@ public:
 };
 
 
-class Table {
+class Table 
+{
 public:
     
     HashTable hashTable;
@@ -69,9 +80,11 @@ public:
     Table(const string& table_name, int rows, int cols)
         : name(table_name), data(rows, vector<string>(cols)) , hashTable(100) {}
 
-    void setColumnNames(vector<string> s) {
+    void setColumnNames(vector<string> s) 
+    {
        
-        for (int i = 0; i < s.size(); i++) {
+        for (int i = 0; i < s.size(); i++) 
+        {
             string columnName;
             
             columnName = s[i];
@@ -79,45 +92,56 @@ public:
         }
     }
 
-    void saveToFile() const {
+    void saveToFile() const 
+    {
         ofstream file(name + ".txt");
 
-        if (file.is_open()) {
+        if (file.is_open()) 
+        {
             file << "Table Name: " << name << endl;
 
-            for (const string& columnName : columnNames) {
+            for (const string& columnName : columnNames) 
+            {
                 file << " " << columnName;
             }
             file << endl;
 
-            for (int i = 0; i < data.size(); i++) {
-                for (int j = 0; j < data[i].size(); j++) {
+            for (int i = 0; i < data.size(); i++) 
+            {
+                for (int j = 0; j < data[i].size(); j++) 
+                {
                     file << data[i][j] << " ";
                 }
                 file << endl;
             }
             file.close();
             cout << "Table data saved to " << name << ".txt" << endl;
-        } else {
+        } 
+        else 
+        {
             cout << "Unable to open file for writing." << endl;
         }
     }
 
-    void loadFromFile() {
+    void loadFromFile() 
+    {
         ifstream file(name + ".txt");
 
-        if (file.is_open()) {
+        if (file.is_open()) 
+        {
             string line;
 
             getline(file, line);
 
             columnNames.clear();
 
-            if (getline(file, line)) {
+            if (getline(file, line)) 
+            {
                 istringstream columnNamesStream(line);
                 string columnName;
 
-                while (columnNamesStream >> columnName) {
+                while (columnNamesStream >> columnName) 
+                {
                     columnNames.push_back(columnName);
                 }
             }
@@ -126,12 +150,14 @@ public:
             data.clear();
 
             
-            while (getline(file, line) && !line.empty()) {
+            while (getline(file, line) && !line.empty())
+             {
                 istringstream rowStream(line);
                 vector<string> row;
 
                 string cell;
-                while (rowStream >> cell) {
+                while (rowStream >> cell) 
+                {
                     row.push_back(cell);
                 }
 
@@ -143,25 +169,31 @@ public:
 
             file.close();
 
-            for(int i = 0 ; i < columnNames.size(); i++){
+            for(int i = 0 ; i < columnNames.size(); i++)
+            {
                 string key = columnNames[i];
                 vector<string> d;
-                for(int j = 0 ; j < data.size(); j++){
+                for(int j = 0 ; j < data.size(); j++)
+                {
                     d.push_back(data[j][i]);
                 }
                 hashTable.insert(key,d);
             }
 
             cout << "Table data loaded from " << name << ".txt" << endl;
-        } else {
+        } 
+        else 
+        {
             cout << "Table file not found." << endl;
         }
     }
 
-    void insert(vector<string> s) {
+    void insert(vector<string> s) 
+    {
        
         vector<string> temp;
-        for (int i = 0; i < columnNames.size(); i++) {
+        for (int i = 0; i < columnNames.size(); i++) 
+        {
             string x;
             x=s[i];
             temp.push_back(x);
@@ -175,29 +207,35 @@ public:
 
     void display() const {
         cout << "Table Name: " << name << endl;
-        for (const auto& x : columnNames) {
+        for (const auto& x : columnNames) 
+        {
             cout << x << " ";
         }
         cout << endl;
-        for (int i = 0; i < data.size(); i++) {
-            for (int j = 0; j < data[i].size(); j++) {
+        for (int i = 0; i < data.size(); i++) 
+        {
+            for (int j = 0; j < data[i].size(); j++) 
+            {
                 cout << data[i][j] << " ";
             }
             cout << endl;
         }
     }
     
-    vector<vector<string>> selectAll() const {
+    vector<vector<string>> selectAll() const
+     {
         return data;
     }
 
-    vector<vector<string>> selectWhere(const string& columnName, const string& value) const {
+    vector<vector<string>> selectWhere(const string& columnName, const string& value) const 
+    {
         vector<vector<string>> result;
         size_t columnIndex = findColumnIndex(columnName);
 
         if (columnIndex != string::npos) {
             for (const auto& row : data) {
-                if (row.size() > columnIndex && row[columnIndex] == value) {
+                if (row.size() > columnIndex && row[columnIndex] == value) 
+                {
                     result.push_back(row);
                 }
             }
@@ -205,25 +243,33 @@ public:
 
         return result;
     }
-    vector<vector<string>> selectWhereGreaterThan(const string& columnName, const string& value) const {
+    vector<vector<string>> selectWhereGreaterThan(const string& columnName, const string& value) const 
+    {
     vector<vector<string>> result;
     size_t columnIndex = findColumnIndex(columnName);
 
-    if (columnIndex != string::npos) {
-        for (const auto& row : data) {
-            if (row.size() > columnIndex) {
+    if (columnIndex != string::npos) 
+    {
+        for (const auto& row : data)
+         {
+            if (row.size() > columnIndex)
+             {
                 const string& cellValue = row[columnIndex];
                 bool greaterThan;
 
-                try {
+                try 
+                {
                     int intValue = stoi(cellValue);
                     int compareValue = stoi(value);
                     greaterThan = (intValue > compareValue);
-                } catch (const invalid_argument&) {
+                } 
+                catch (const invalid_argument&) 
+                {
                     greaterThan = (cellValue > value);
                 }
 
-                if (greaterThan) {
+                if (greaterThan) 
+                {
                     result.push_back(row);
                 }
             }
@@ -234,15 +280,19 @@ public:
 }
 
 
-    vector<string> selectDistinct(const string& columnName) const {
+    vector<string> selectDistinct(const string& columnName) const 
+    {
         vector<string> distinctValues;
         size_t columnIndex = findColumnIndex(columnName);
 
-        if (columnIndex != string::npos) {
+        if (columnIndex != string::npos)
+         {
             unordered_set<string> uniqueSet;
 
-            for (const auto& row : data) {
-                if (row.size() > columnIndex) {
+            for (const auto& row : data) 
+            {
+                if (row.size() > columnIndex) 
+                {
                     uniqueSet.insert(row[columnIndex]);
                 }
             }
@@ -253,23 +303,30 @@ public:
         return distinctValues;
     }
 
-    size_t findColumnIndex(const string& columnName) const {
-        for (size_t i = 0; i < columnNames.size(); ++i) {
-            if (columnNames[i] == columnName) {
+    size_t findColumnIndex(const string& columnName) const 
+    {
+        for (size_t i = 0; i < columnNames.size(); ++i) 
+        {
+            if (columnNames[i] == columnName) 
+            {
                 return i;
             }
         }
         return string::npos; 
     }
 
-    double calculateSum(const string& columnName) const {
+    double calculateSum(const string& columnName) const 
+    {
         size_t columnIndex = findColumnIndex(columnName);
 
-        if (columnIndex != string::npos) {
+        if (columnIndex != string::npos) 
+        {
             vector<double> numericColumn;
 
-            for (const auto& row : data) {
-                if (row.size() > columnIndex) {
+            for (const auto& row : data)
+             {
+                if (row.size() > columnIndex) 
+                {
                    
                     double value = stod(row[columnIndex]);
                     numericColumn.push_back(value);
@@ -278,23 +335,28 @@ public:
 
             
             double sum = 0;
-            for(auto x : numericColumn){
+            for(auto x : numericColumn)
+            {
                 sum+=x;
             }
             return sum;
         }
 
-        return 0.0; // Return 0 if the column is not found or does not contain numeric values
+        return 0.0; 
     }
 
-     double calculateAVG(const string& columnName) const {
+     double calculateAVG(const string& columnName) const 
+     {
         size_t columnIndex = findColumnIndex(columnName);
 
-        if (columnIndex != string::npos) {
+        if (columnIndex != string::npos) 
+        {
             vector<double> numericColumn;
 
-            for (const auto& row : data) {
-                if (row.size() > columnIndex) {
+            for (const auto& row : data) 
+            {
+                if (row.size() > columnIndex) 
+                {
                    
                     double value = stod(row[columnIndex]);
                     numericColumn.push_back(value);
@@ -303,21 +365,24 @@ public:
 
             
             double sum = 0;
-            for(auto x : numericColumn){
+            for(auto x : numericColumn)
+            {
                 sum+=x;
             }
             return sum/numericColumn.size();
         }
 
-        return 0.0; // Return 0 if the column is not found or does not contain numeric values
+        return 0.0; 
      }
 
     
 
-    void selectColumn(const string& columnName) const {
+    void selectColumn(const string& columnName) const 
+    {
         vector<string> result=hashTable.getData(columnName);
         
-    for (const string& cell : result) {
+    for (const string& cell : result) 
+    {
         cout << cell << " ";
     }
     cout << endl;
@@ -332,14 +397,17 @@ public:
 
 
 
-class demo{
+class demo
+{
         public:
 
-        void newSelectcol(){
+        void newSelectcol()
+        {
             string tableName, columnName;
         cout << "Enter table name: ";
         cin >> tableName;
-            if (tableExistsOnDisk(tableName)) {
+            if (tableExistsOnDisk(tableName))
+             {
             Table existingTable(tableName, 3, 5);
             existingTable.loadFromFile();
             existingTable.display();
@@ -348,18 +416,22 @@ class demo{
             cin >> columnName;
 
             existingTable.selectColumn(columnName);
-        } else {
+        } 
+        else 
+        {
             cout << "Table doesn't exist" << endl;
         }
         }
 
 
-        void calculateColumnSum() {
+        void calculateColumnSum() 
+        {
         string tableName, columnName;
         cout << "Enter table name: ";
         cin >> tableName;
 
-        if (tableExistsOnDisk(tableName)) {
+        if (tableExistsOnDisk(tableName))
+         {
             Table existingTable(tableName, 3, 5);
             existingTable.loadFromFile();
             existingTable.display();
@@ -369,24 +441,31 @@ class demo{
 
             double sum = existingTable.calculateSum(columnName);
 
-            if (sum != 0.0) {
+            if (sum != 0.0) 
+            {
                 cout << "Sum of values in the '" << columnName << "' column: " << sum << endl;
-            } else {
+            } 
+            else 
+            {
                 cout << "Column not found or does not contain numeric values." << endl;
             }
-        } else {
+        } 
+        else 
+        {
             cout << "Table doesn't exist" << endl;
         }
     }
 
 
 
-    void calculateColumnAVG() {
+    void calculateColumnAVG() 
+    {
         string tableName, columnName;
         cout << "Enter table name: ";
         cin >> tableName;
 
-        if (tableExistsOnDisk(tableName)) {
+        if (tableExistsOnDisk(tableName)) 
+        {
             Table existingTable(tableName, 3, 5);
             existingTable.loadFromFile();
             existingTable.display();
@@ -396,18 +475,24 @@ class demo{
 
             double sum = existingTable.calculateAVG(columnName);
 
-            if (sum != 0.0) {
+            if (sum != 0.0) 
+            {
                 cout << "Average of values in the '" << columnName << "' column: " << sum << endl;
-            } else {
+            } 
+            else 
+            {
                 cout << "Column not found or does not contain numeric values." << endl;
             }
-        } else {
+        }
+         else
+          {
             cout << "Table doesn't exist" << endl;
         }
     }
             
 
-            void create(){
+            void create()
+            {
                 vector<string> columnNames;
                  string tableName; string cmd;
                  cout<<"Enter create command: ";
@@ -416,40 +501,45 @@ class demo{
                  
                  
               
-    size_t posOpen = cmd.find("(");
-    size_t posClose = cmd.find(")");
+                 size_t posOpen = cmd.find("(");
+                size_t posClose = cmd.find(")");
 
-    if (posOpen != string::npos && posClose != string::npos && posOpen < posClose) {
+                if (posOpen != string::npos && posClose != string::npos && posOpen < posClose) {
         
-        string columnsSubstring = cmd.substr(posOpen + 1, posClose - posOpen - 1);
+                string columnsSubstring = cmd.substr(posOpen + 1, posClose - posOpen - 1);
 
-        // Tokenize the substring based on commas
-        stringstream ss(columnsSubstring);
-        string token;
+      
+                stringstream ss(columnsSubstring);
+                string token;
 
        
-        while (getline(ss, token, ',')) {
+                while (getline(ss, token, ',')) {
             
-            token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
+                token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
 
             
-            if (!token.empty()) {
+            if (!token.empty())
+             {
                 columnNames.push_back(token);
             }
         }
 
         
         tableName = cmd.substr(12, posOpen - 13); 
-    } else {
+    } 
+    else 
+    {
         
         cout << "Invalid CREATE TABLE command format." << endl;
     }
                 
 
-                if(tableExistsOnDisk(tableName)){
+                if(tableExistsOnDisk(tableName))
+                {
                     cout<<"Table exists select another name";
                 }
-                else{
+                else
+                {
                     
                     int x,y;
                    
@@ -467,7 +557,8 @@ class demo{
 
             
 
-            void insert(){
+            void insert()
+            {
                 
                 string cmd;
                 cout<<"Enter insert into command: ";
@@ -479,7 +570,8 @@ class demo{
 
     size_t posOpen = cmd.find("(");
         size_t posClose = cmd.find(")");
-        if (posOpen != string::npos && posClose != string::npos && posOpen < posClose) {
+        if (posOpen != string::npos && posClose != string::npos && posOpen < posClose)
+         {
         
         string columnsSubstring = cmd.substr(posOpen + 1, posClose - posOpen - 1);
 
@@ -488,12 +580,14 @@ class demo{
         string token;
 
         
-        while (getline(ss, token, ',')) {
+        while (getline(ss, token, ',')) 
+        {
             
             token.erase(remove_if(token.begin(), token.end(), ::isspace), token.end());
 
             
-            if (!token.empty()) {
+            if (!token.empty())
+             {
                 values.push_back(token);
             }
         }
@@ -501,11 +595,13 @@ class demo{
 
     }
 
-    else {
+    else 
+    {
        
         cout << "Invalid CREATE TABLE command format." << endl;
     }
-                if(tableExistsOnDisk(tableName)){
+                if(tableExistsOnDisk(tableName))
+                {
                     Table existingTable(tableName,3,5);
                     existingTable.loadFromFile();
                     existingTable.display();
@@ -518,7 +614,8 @@ class demo{
                     existingTable.display();
 
                 }
-                else{
+                else
+                {
                     cout<<"Table doesn't exist"<<endl;
                 }
 
@@ -526,7 +623,8 @@ class demo{
 
            
 
-    string parseTableName(const string& query) {
+    string parseTableName(const string& query) 
+    {
     istringstream iss(query);
     string keyword, tableName;
 
@@ -543,7 +641,9 @@ class demo{
 
        
         iss >> tableName;
-    } else {
+    }
+     else 
+     {
         
         cout << "Invalid SELECT query." << endl;
     }
@@ -551,7 +651,8 @@ class demo{
     return tableName;
 }
 
-    void selectAll() {
+    void selectAll() 
+    {
         string tableName;
        string sqlQuery ;
     cout<<"Enter select command: ";
@@ -560,7 +661,8 @@ class demo{
 
     
     tableName = parseTableName(sqlQuery);
-        if (tableExistsOnDisk(tableName)) {
+        if (tableExistsOnDisk(tableName)) 
+        {
             Table existingTable(tableName, 3, 5);
             existingTable.loadFromFile();
             existingTable.display();
@@ -569,18 +671,22 @@ class demo{
 
             cout << "Selected All Rows and Columns: " << endl;
             displayResult(result);
-        } else {
+        }
+         else
+          {
             cout << "Table doesn't exist" << endl;
         }
     }
 
    
-    void selectWhere() {
+    void selectWhere() 
+    {
         string tableName, columnName, value;
         cout << "Enter table name: ";
         cin >> tableName;
 
-        if (tableExistsOnDisk(tableName)) {
+        if (tableExistsOnDisk(tableName)) 
+        {
             Table existingTable(tableName, 3, 5);
             existingTable.loadFromFile();
             existingTable.display();
@@ -592,18 +698,22 @@ class demo{
 
             cout << "Selected Rows Where " << columnName << " = " << value << ":" << endl;
             displayResult(result);
-        } else {
+        }
+         else 
+         {
             cout << "Table doesn't exist" << endl;
         }
     }
 
-    // Function to select distinct values from a column
-    void selectDistinct() {
+    
+    void selectDistinct() 
+    {
         string tableName, columnName;
         cout << "Enter table name: ";
         cin >> tableName;
 
-        if (tableExistsOnDisk(tableName)) {
+        if (tableExistsOnDisk(tableName)) 
+        {
             Table existingTable(tableName, 3, 5);
             existingTable.loadFromFile();
             existingTable.display();
@@ -615,23 +725,28 @@ class demo{
 
             cout << "Distinct Values in Column " << columnName << ":" << endl;
             displayResult(result);
-        } else {
+        } 
+        else 
+        {
             cout << "Table doesn't exist" << endl;
         }
     }
 
-            bool tableExistsOnDisk(const string& table_name) {
+            bool tableExistsOnDisk(const string& table_name) 
+            {
                 ifstream file(table_name + ".txt");
                 return file.good();
         }
 
-        //select where greater than
-        void selectWheregreaterthan() {
+       
+        void selectWheregreaterthan() 
+        {
         string tableName, columnName, value;
         cout << "Enter table name: ";
         cin >> tableName;
 
-        if (tableExistsOnDisk(tableName)) {
+        if (tableExistsOnDisk(tableName)) 
+        {
             Table existingTable(tableName, 3, 5);
             existingTable.loadFromFile();
             existingTable.display();
@@ -645,22 +760,29 @@ class demo{
             vector<vector<string>> selectedRows = existingTable.selectWhereGreaterThan(columnName, value);
 
             cout << "Selected Rows for condition: " << columnName << " = " << value << endl;
-            for (const auto& row : selectedRows) {
-                for (const string& cell : row) {
+            for (const auto& row : selectedRows) 
+            {
+                for (const string& cell : row) 
+                {
                     cout << cell << " ";
                 }
                 cout << endl;
             }
-        } else {
+        } 
+        else 
+        {
             cout << "Table doesn't exist" << endl;
         }
     }
 
     private:
    
-    void displayResult(const vector<vector<string>>& result) const {
-        for (const auto& row : result) {
-            for (const string& cell : row) {
+    void displayResult(const vector<vector<string>>& result) const 
+    {
+        for (const auto& row : result) 
+        {
+            for (const string& cell : row) 
+            {
                 cout << cell << " ";
             }
             cout << endl;
@@ -668,22 +790,29 @@ class demo{
     }
 
     
-    void displayResult(const vector<string>& result) const {
-        for (const string& value : result) {
+    void displayResult(const vector<string>& result) const
+     {
+        for (const string& value : result)
+         {
             cout << value << endl;
         }
     }
 };
 
-class typecast{
-   std::vector<int> stringToInt(const std::vector<std::string>& a) {
+class typecast
+{
+   std::vector<int> stringToInt(const std::vector<std::string>& a)
+    {
     std::vector<int> result;
     
-    for (const std::string& str : a) {
-        try {
+    for (const std::string& str : a) 
+    {
+        try 
+        {
             int num = std::stoi(str);
             result.push_back(num);
-        } catch (const std::invalid_argument& e) {
+        } catch (const std::invalid_argument& e) 
+        {
             std::cerr << "Invalid argument: " << e.what() << std::endl;
         } catch (const std::out_of_range& e) {
             std::cerr << "Out of range: " << e.what() << std::endl;
@@ -694,12 +823,14 @@ class typecast{
 }
 };
 
-bool tableExistsOnDisk(const string& table_name) {
+bool tableExistsOnDisk(const string& table_name) 
+{
     ifstream file(table_name + ".txt");
     return file.good();
 }
 
-int main() {
+int main() 
+{
     
     demo d;
    
