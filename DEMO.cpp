@@ -241,13 +241,43 @@ public:
                 }
             }
 
-            // Calculate the sum using std::accumulate
-            double sum = accumulate(numericColumn.begin(), numericColumn.end(), 0.0);
+            
+            double sum = 0;
+            for(auto x : numericColumn){
+                sum+=x;
+            }
             return sum;
         }
 
         return 0.0; // Return 0 if the column is not found or does not contain numeric values
     }
+
+     double calculateAVG(const string& columnName) const {
+        size_t columnIndex = findColumnIndex(columnName);
+
+        if (columnIndex != string::npos) {
+            vector<double> numericColumn;
+
+            for (const auto& row : data) {
+                if (row.size() > columnIndex) {
+                    // Convert string to double (assuming the column contains numeric values)
+                    double value = stod(row[columnIndex]);
+                    numericColumn.push_back(value);
+                }
+            }
+
+            
+            double sum = 0;
+            for(auto x : numericColumn){
+                sum+=x;
+            }
+            return sum/numericColumn.size();
+        }
+
+        return 0.0; // Return 0 if the column is not found or does not contain numeric values
+     }
+
+    
 
     vector<string> selectColumn(const string& columnName) const {
         vector<string> result;
@@ -291,6 +321,33 @@ class demo{
 
             if (sum != 0.0) {
                 cout << "Sum of values in the '" << columnName << "' column: " << sum << endl;
+            } else {
+                cout << "Column not found or does not contain numeric values." << endl;
+            }
+        } else {
+            cout << "Table doesn't exist" << endl;
+        }
+    }
+
+
+
+    void calculateColumnAVG() {
+        string tableName, columnName;
+        cout << "Enter table name: ";
+        cin >> tableName;
+
+        if (tableExistsOnDisk(tableName)) {
+            Table existingTable(tableName, 3, 5);
+            existingTable.loadFromFile();
+            existingTable.display();
+
+            cout << "Enter column name to calculate sum: ";
+            cin >> columnName;
+
+            double sum = existingTable.calculateAVG(columnName);
+
+            if (sum != 0.0) {
+                cout << "Average of values in the '" << columnName << "' column: " << sum << endl;
             } else {
                 cout << "Column not found or does not contain numeric values." << endl;
             }
@@ -623,7 +680,8 @@ int main() {
     //d.create(); 
    
     //d.insert();
-    d.calculateColumnSum();
+    //d.calculateColumnSum();
+    d.calculateColumnAVG();
      //d.selectAll();
     //d.selectDistinct();
    // d.selectWheregreaterthan();
