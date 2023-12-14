@@ -227,6 +227,28 @@ public:
         return string::npos; 
     }
 
+    double calculateSum(const string& columnName) const {
+        size_t columnIndex = findColumnIndex(columnName);
+
+        if (columnIndex != string::npos) {
+            vector<double> numericColumn;
+
+            for (const auto& row : data) {
+                if (row.size() > columnIndex) {
+                    // Convert string to double (assuming the column contains numeric values)
+                    double value = stod(row[columnIndex]);
+                    numericColumn.push_back(value);
+                }
+            }
+
+            // Calculate the sum using std::accumulate
+            double sum = accumulate(numericColumn.begin(), numericColumn.end(), 0.0);
+            return sum;
+        }
+
+        return 0.0; // Return 0 if the column is not found or does not contain numeric values
+    }
+
     vector<string> selectColumn(const string& columnName) const {
         vector<string> result;
         size_t columnIndex = findColumnIndex(columnName);
@@ -250,6 +272,32 @@ public:
 
 class demo{
         public:
+
+
+        void calculateColumnSum() {
+        string tableName, columnName;
+        cout << "Enter table name: ";
+        cin >> tableName;
+
+        if (tableExistsOnDisk(tableName)) {
+            Table existingTable(tableName, 3, 5);
+            existingTable.loadFromFile();
+            existingTable.display();
+
+            cout << "Enter column name to calculate sum: ";
+            cin >> columnName;
+
+            double sum = existingTable.calculateSum(columnName);
+
+            if (sum != 0.0) {
+                cout << "Sum of values in the '" << columnName << "' column: " << sum << endl;
+            } else {
+                cout << "Column not found or does not contain numeric values." << endl;
+            }
+        } else {
+            cout << "Table doesn't exist" << endl;
+        }
+    }
             
 
             void create(){
@@ -569,67 +617,16 @@ bool tableExistsOnDisk(const string& table_name) {
 }
 
 int main() {
-    /*cout << "Enter table name: ";
-    string table_name;
-    cin >> table_name;
-
-    if (tableExistsOnDisk(table_name)) {
-        cout << "Table with the same name already exists. Loading existing table." << endl;
-
-        // Create a temporary table to load existing data
-        Table existingTable(table_name, 3, 5);
-        existingTable.loadFromFile();
-        existingTable.display();
-
-        // Create a hash table with a specified number of buckets
-        HashTable hashTable(10);
-
-        // Insert data into the hash table and the existing table
-        existingTable.insert(hashTable);
-
-        // Display the hash table
-        cout << "\nHash Table:\n";
-        hashTable.display();
-
-        // Save the updated existing table
-        existingTable.saveToFile();
-        existingTable.display();
-    } else {
-        int row, column;
-        cout << "Enter num of rows and columns in your table: ";
-        cin >> row >> column;
-
-        // Create a table with user-specified rows and columns
-        Table newTable(table_name, row, column);
-
-        // Set column names for the new table
-        newTable.setColumnNames();
-
-        cout << "Create Table: " << endl;
-
-        // Input data for the new table
-        for (int i = 0; i < newTable.data.size(); i++) {
-            for (int j = 0; j < newTable.data[i].size(); j++) {
-                cin >> newTable.data[i][j];
-            }
-        }
-
-        // Save the new table to a file
-        newTable.saveToFile();
-        newTable.display();
-    }
-
-
-    return 0;*/
+    
     demo d;
    
-    d.create(); 
+    //d.create(); 
    
-    d.insert();
-    
-     d.selectAll();
-    d.selectDistinct();
+    //d.insert();
+    d.calculateColumnSum();
+     //d.selectAll();
+    //d.selectDistinct();
    // d.selectWheregreaterthan();
-    d.selectColumn(); 
-    d.selectWhere();
+    //d.selectColumn(); 
+    //d.selectWhere();
 }
