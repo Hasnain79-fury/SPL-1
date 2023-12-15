@@ -692,8 +692,8 @@ class demo
         string tableName;
        string sqlQuery ;
     cout<<"Enter select command: ";
-                 
-                getline(cin, sqlQuery);
+    // cin>>sqlQuery;            
+    getline(cin, sqlQuery);
 
     
     tableName = parseTableName(sqlQuery);
@@ -819,7 +819,7 @@ class demo
 
             vector<vector<string>> selectedRows = existingTable.selectWhereGreaterThan(columnName, value);
 
-            cout << "Selected Rows for condition: " << columnName << " = " << value << endl;
+            cout << "Selected Rows for condition: " << columnName << " > " << value << endl;
             for (const auto& row : selectedRows) 
             {
                 for (const string& cell : row) 
@@ -889,20 +889,75 @@ bool tableExistsOnDisk(const string& table_name)
     return file.good();
 }
 
-int main() 
-{
-    
-    demo d;
-   
-   // d.newSelectcol();
-   
-   // d.create(); 
-   //d.insert();
-    //d.calculateColumnSum();
-   //d.calculateColumnAVG();
-    // d.selectAll();
-    //d.selectDistinct();
-  // d.selectWheregreaterthan();
-   d.DeleteWhere();
-    //d.selectWhere();
+
+class DemoRunner {
+public:
+    void runDemoMethods() {
+        char choice;
+        do {
+            displayMenu();
+            cout << "Enter your choice: ";
+            cin >> choice;
+            cin.ignore(); // Ignore any remaining newline characters
+
+            switch (choice) {
+                case '1':
+                    demoObject.create();
+                    break;
+                case '2':
+                    demoObject.insert();
+                    break;
+                case '3':
+                    demoObject.calculateColumnSum();
+                    break;
+                case '4':
+                    demoObject.calculateColumnAVG();
+                    break;
+                case '5':
+                    demoObject.selectAll();
+                    break;
+                case '6':
+                    demoObject.selectDistinct();
+                    break;
+                case '7':
+                    demoObject.selectWheregreaterthan();
+                    break;
+                case '8':
+                    demoObject.selectWhere();
+                    break;
+                case '9':
+                    demoObject.DeleteWhere();
+                    break;
+                case '0':
+                    cout << "Exiting the program. Goodbye!" << endl;
+                    break;
+                default:
+                    cout << "Invalid choice. Please enter a valid option." << endl;
+            }
+        } while (choice != '0');
+    }
+
+private:
+    void displayMenu() const {
+        cout << "\n===== Demo Menu =====" << endl;
+        cout << "1. Create Table" << endl;
+        cout << "2. Insert Data" << endl;
+        cout << "3. Calculate Column Sum" << endl;
+        cout << "4. Calculate Column AVG" << endl;
+        cout << "5. Select All" << endl;
+        cout << "6. Select Distinct" << endl;
+        cout << "7. Select Where Greater Than" << endl;
+        cout << "8. Select Where" << endl;
+        cout << "9. Delete Where" << endl;
+        cout << "0. Exit" << endl;
+    }
+
+    demo demoObject; // Create an instance of the demo class
+};
+
+int main() {
+    DemoRunner demoRunner;
+    demoRunner.runDemoMethods(); // Run the demo methods
+
+    return 0;
 }

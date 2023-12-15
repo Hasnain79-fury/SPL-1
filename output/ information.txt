@@ -1,0 +1,6 @@
+Table Name:  information
+ name roll marks
+alvi 27 10 
+habib 22 15 
+Mustakim 05 20 
+shaikh 39 17 
