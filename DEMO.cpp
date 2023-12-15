@@ -243,6 +243,42 @@ public:
 
         return result;
     }
+
+    void insertAndClear(vector<vector<string>> s) {
+
+    data.clear();
+
+    
+    for (int i = 0; i < s.size(); i++) {
+        vector<string> temp;
+        for(int j = 0 ; j < s[0].size(); j++){
+            temp.push_back(s[i][j]);
+
+        }
+        data.push_back(temp);
+    }
+
+    
+   
+}
+
+    vector<vector<string>> deleteWhere(const string& columnName, const string& value) const {
+        vector<vector<string>> result;
+        size_t columnIndex = findColumnIndex(columnName);
+
+        if (columnIndex != string::npos) {
+            for (const auto& row : data) {
+                if (row.size() > columnIndex && row[columnIndex] != value) {
+                    result.push_back(row);
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+
     vector<vector<string>> selectWhereGreaterThan(const string& columnName, const string& value) const 
     {
     vector<vector<string>> result;
@@ -705,6 +741,30 @@ class demo
         }
     }
 
+    void DeleteWhere() {
+        string tableName, columnName, value;
+        cout << "Enter table name: ";
+        cin >> tableName;
+
+        if (tableExistsOnDisk(tableName)) {
+            Table existingTable(tableName, 3, 5);
+            existingTable.loadFromFile();
+            existingTable.display();
+
+            cout << "Enter column name and value to select: ";
+            cin >> columnName >> value;
+
+            vector<vector<string>> result = existingTable.deleteWhere(columnName, value);
+            existingTable.insertAndClear(result);
+            //existingTable.display();
+            existingTable.saveToFile();
+            cout << "Deleted Rows Where " << columnName << " = " << value << ":" << endl;
+            displayResult(result);
+        } else {
+            cout << "Table doesn't exist" << endl;
+        }
+    }
+
     
     void selectDistinct() 
     {
@@ -842,7 +902,7 @@ int main()
    //d.calculateColumnAVG();
     // d.selectAll();
     //d.selectDistinct();
-   d.selectWheregreaterthan();
-   
+  // d.selectWheregreaterthan();
+   d.DeleteWhere();
     //d.selectWhere();
 }
