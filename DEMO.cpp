@@ -5,16 +5,13 @@
 #include <list>
 #include <vector>
 #include <stdexcept>
+#include <string>
+#include <functional>
 #include <bits/stdc++.h>
 using namespace std;
 
-#include <iostream>
-#include <vector>
-#include <list>
-#include <string>
-#include <functional>
 
-using namespace std;
+
 
 class HashTable 
 {
@@ -751,7 +748,7 @@ class demo
             existingTable.loadFromFile();
             existingTable.display();
 
-            cout << "Enter column name and value to select: ";
+            cout << "Enter column name and value to DELETE: ";
             cin >> columnName >> value;
 
             vector<vector<string>> result = existingTable.deleteWhere(columnName, value);
@@ -759,6 +756,7 @@ class demo
             //existingTable.display();
             existingTable.saveToFile();
             cout << "Deleted Rows Where " << columnName << " = " << value << ":" << endl;
+            cout<<"Current table"<<endl;
             displayResult(result);
         } else {
             cout << "Table doesn't exist" << endl;
@@ -898,7 +896,7 @@ public:
             displayMenu();
             cout << "Enter your choice: ";
             cin >> choice;
-            cin.ignore(); // Ignore any remaining newline characters
+            cin.ignore(); 
 
             switch (choice) {
                 case '1':
@@ -952,12 +950,11 @@ private:
         cout << "0. Exit" << endl;
     }
 
-    demo demoObject; // Create an instance of the demo class
+    demo demoObject; 
 };
 
 int main() {
     DemoRunner demoRunner;
-    demoRunner.runDemoMethods(); // Run the demo methods
-
+    demoRunner.runDemoMethods(); 
     return 0;
 }
